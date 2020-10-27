@@ -2,6 +2,7 @@ import React from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import { Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -44,23 +45,42 @@ const BookedNavigator = createStackNavigator({
   }
 })
 
-const BottomNavigator = createBottomTabNavigator({
+const bottomTabsConfig = {
   Post: {
     screen: PostNavigator,
     navigationOptions: {
+      tabBarLabel: 'Все',
       tabBarIcon: info => <Ionicons name="ios-albums" size={25} color={info.tintColor}/>,
     }
   },
   Booked: {
     screen: BookedNavigator,
     navigationOptions: {
+      tabBarLabel: 'Избранное',
       tabBarIcon: info => <Ionicons name="ios-star" size={25} color={info.tintColor}/>,
     }
   }
-}, {
-  tabBarOptions: {
-    activeTintColor: THEME.MAIN_COLOR
-  }
-})
+}
+
+const BottomNavigator = 
+  Platform.OS === 'android' 
+    ? createMaterialBottomTabNavigator(
+      bottomTabsConfig, 
+      {
+        activeTintColor: '#fff',
+        shifting: true,
+        barStyle: {
+          backgroundColor: THEME.MAIN_COLOR
+        }
+      }
+    ) 
+    : createBottomTabNavigator(
+      bottomTabsConfig, 
+      {
+        tabBarOptions: {
+          activeTintColor: THEME.MAIN_COLOR
+        }
+      }
+    )
 
 export const AppNavigation = createAppContainer(BottomNavigator)
