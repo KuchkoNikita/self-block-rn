@@ -1,9 +1,10 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
-import { Platform } from 'react-native';
+import { createDrawerNavigator } from 'react-navigation-drawer'
 import { Ionicons } from '@expo/vector-icons';
 
 import { MainScreen } from '../screens/MainScreen';
@@ -58,6 +59,14 @@ const bottomTabsConfig = {
   }
 }
 
+const AboutNavigator = createStackNavigator({
+  About: AboutScreen,
+}, navigatorOptions);
+
+const CreateNavigator = createStackNavigator({
+  Create: CreateScreen,
+}, navigatorOptions)
+
 const BottomNavigator = 
   Platform.OS === 'android' 
     ? createMaterialBottomTabNavigator(
@@ -79,4 +88,32 @@ const BottomNavigator =
       }
     )
 
-export const AppNavigation = createAppContainer(BottomNavigator)
+const MainNavigator = createDrawerNavigator({
+  PostTabs: {
+    screen: BottomNavigator,
+    navigationOptions: {
+      drawerLabel: 'Главная',
+    }
+  },
+  About: {
+    screen: AboutNavigator,
+    navigationOptions: {
+      drawerLabel: 'О приложении',
+    }
+  },
+  Create: {
+    screen: CreateNavigator,
+    navigationOptions: {
+      drawerLabel: 'Новый пост',
+    }
+  },
+}, {
+  contentOptions: {
+    activeTintColor: THEME.MAIN_COLOR,
+    labelStyle: {
+      fontFamily: 'open-bold'
+    }
+  }
+})
+
+export const AppNavigation = createAppContainer(MainNavigator)
