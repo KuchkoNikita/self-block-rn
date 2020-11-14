@@ -1,9 +1,9 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
 import { AppHeaderIcon } from '../components/AppHeaderIcon'
 import { PostList } from '../components/PostList';
-import { DATA } from '../data'
 
 export const BookedScreen = ({ navigation }) => {
 
@@ -16,9 +16,9 @@ export const BookedScreen = ({ navigation }) => {
     )
   }
 
-  const data = DATA.filter(post => post.booked)
+  const bookedPosts = useSelector(state => state.post.bookedPosts);
 
-  return <PostList data={ data } onOpen={ openPostHandler } />
+  return <PostList data={ bookedPosts } onOpen={ openPostHandler } />
 }
 
 BookedScreen.navigationOptions = ({ navigation }) => ({
